@@ -13,7 +13,7 @@ Open http://localhost:3000 to view it in the browser.
 
 Description: 
 =
-Created to track notes 
-we can add multiple notes and delete them as well
-Added notes will displayed on the page
+Created to track notes.
+we can add multiple notes and delete them as well.
+Added notes will displayed on the page.
 
