@@ -190,3 +190,7 @@ footer {
 .DeleteOutlineIcon:hover{
   motion: fill-box;
 }
+div .mb-3{
+  width: 20rem;
+  float: center;
+}

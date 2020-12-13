@@ -1,57 +1,41 @@
 import React from 'react';
-
+import { 
+	BrowserRouter as Router, 
+	Route, 
+	Link, 
+	Switch 
+} from 'react-router-dom'; 
+import x from './Login';
 import './App.css';
 import Header from './Header';
 import Footer from './Footer';
-
+import Notes from './Notes';
 import Note from './Note';
 import AddNote from './AddNote'
-import { useState } from 'react';
-
+import { useState,useEffect } from 'react';
+import Login from './Login';
+import Register from './Register';
+import axios from 'axios';
 function App() {
+  
 
-  let [addItem,setaddItem]= useState([])
 
-  const addNote = (note)=>{
+  
 
-    setaddItem((prev)=>{
-      return [...prev,note]
-    })
-    
-    
-    
-  }
-  const onDelete = (id)=>{
-
-    setaddItem((oldData)=>
-      oldData.filter((curData,indx)=>{
-        return indx !== id; 
-      }
-      
-      )
-    
-
-    );
-
-  }
+  
   return (
     <>
-      <Header />
-      <Note passNote = {addNote}/>
-     
-      {
-        addItem.map((val,index)=>{
-          return ( <AddNote 
-            key= {index}
-            id={index}
-            title={val.title}
-            content={val.content}
-            deleteItem ={onDelete}
-         />)
-          
-        })
-      }
-
+    
+      <Router>
+        <Header />
+      <Switch> 
+              {/* <Route exact path='/' component={Header}></Route>  */}
+              <Route exact path='/login' component={Login}></Route> 
+              <Route exact path='/notes' component={Notes}></Route>
+              <Route exact path='/register' component={Register}></Route> 
+            </Switch> 
+      </Router>
+      
     </>
   );
 }

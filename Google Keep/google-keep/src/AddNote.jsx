@@ -4,7 +4,7 @@ import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 
 function AddNote(props) {
     let deleteNote = () => {
-        props.deleteItem(props.id);
+        props.deleteItem(props.objId,props.id);
     }
     return (
         <>

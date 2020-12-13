@@ -2,12 +2,12 @@ import React from 'react'
 import Button from '@material-ui/core/Button'
 import AddIcon from '@material-ui/icons/Add';
 import { useState } from 'react';
-
+import axios from 'axios';
 
 function Note(props) {
   let [note, setNote] = useState({
     title: '',
-    content: '',
+    content: ''
   })
 
   let [expand,setExpand]=useState(false)
@@ -22,9 +22,17 @@ function Note(props) {
   }
   let addEvent  = ()=>{
        props.passNote(note)
+        let userId = JSON.stringify(localStorage.getItem('user'))
+
+        axios.post('http://localhost:8080/api/addNote', {
+          title: note.title,
+          content: note.content,
+          userId: userId.substring(1, userId.length-1)
+        })
+        .then(response => console.log(response));
        setNote({
         title: '',
-        content: '',
+        content: ''
       })
   }
 let expandIt = ()=>{
