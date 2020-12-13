@@ -23,6 +23,8 @@ Created project to keep notes in track.
 
 Create account with required details and signIn.(After succcesfull login, redirected to Creating notes screen)
 
+Create notes(Title and content) and add
+
 we can add multiple notes and delete them as well.
 
 
