@@ -1,8 +1,7 @@
 # Google Keep clone
 
-Reference : Thapa Technical (Youtube channel)
 
-This project created using ReactJS
+This project created using MERN Stack
 
 
 Run project:  npm start
@@ -32,3 +31,4 @@ Added notes will displayed on the page.
 
 
 
+Reference : Thapa Technical Youtube channel (For Frontend)
