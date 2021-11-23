@@ -1,0 +1,15 @@
+.card{
+    display: flex;
+    flex-direction: row;
+    border-style: ridge;
+    justify-content: space-between;
+    margin-top: 1rem;
+    margin-left: 1rem;
+    margin-right: 1rem;
+    background-color: lightyellow;
+}
+.img{
+    width: 300px;
+    height: 300px;
+    border-style: groove;
+}

@@ -1,0 +1,13 @@
+.card{
+    display: flex;
+    flex-direction: column;
+    border-style: ridge;
+    margin-top: 2rem;
+    margin-left: 2rem;
+    margin-right: 2rem;
+}
+.img{
+    width: 300px;
+    height: 300px;
+    /* border-style: groove; */
+}
