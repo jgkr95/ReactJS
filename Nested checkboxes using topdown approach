@@ -1,0 +1,172 @@
+import "./styles.css";
+import { useState } from "react";
+
+const nestedCheckBoxData = [
+  {
+    id: 1,
+    name: "Vehicles",
+    children: [
+      {
+        id: 2,
+        name: "Car",
+        children: [
+          { id: 4, name: "Sedan" },
+          { id: 5, name: "SUV" },
+          { id: 6, name: "Coupe" },
+          { id: 19, name: "Hatchback" },
+        ],
+      },
+      {
+        id: 3,
+        name: "Bus",
+        children: [
+          { id: 7, name: "School Bus" },
+          { id: 8, name: "Commercial" },
+        ],
+      },
+      {
+        id: 10,
+        name: "Motorbike",
+        children: [
+          { id: 11, name: "Cruiser" },
+          { id: 12, name: "Sport Bike" },
+        ],
+      },
+    ],
+  },
+  {
+    id: 13,
+    name: "Electronics",
+    children: [
+      {
+        id: 14,
+        name: "Computers",
+        children: [
+          { id: 15, name: "Laptop" },
+          { id: 16, name: "Desktop" },
+          { id: 17, name: "Tablet" },
+        ],
+      },
+      {
+        id: 18,
+        name: "Phones",
+        children: [
+          { id: 20, name: "Smartphone" },
+          { id: 21, name: "Feature Phone" },
+        ],
+      },
+    ],
+  },
+  {
+    id: 22,
+    name: "Furniture",
+    children: [
+      {
+        id: 23,
+        name: "Living Room",
+        children: [
+          { id: 24, name: "Sofa" },
+          { id: 25, name: "Coffee Table" },
+        ],
+      },
+      {
+        id: 26,
+        name: "Bedroom",
+        children: [
+          { id: 27, name: "Bed" },
+          { id: 28, name: "Wardrobe" },
+        ],
+      },
+    ],
+  },
+];
+
+const nestedCheckBoxData2 = [
+  {
+    id: 23,
+    name: "Living Room",
+    children: [
+      { id: 24, name: "Sofa" },
+      {
+        id: 25,
+        name: "Coffee Table",
+        children: [{ id: 27, name: "Bed" }],
+      },
+    ],
+  },
+];
+
+const NestedCheckboxes = ({ data, setCheckedState, checkedState }) => {
+  const handleChange = (isChecked, node) => {
+    setCheckedState((prev) => {
+      const newState = { ...prev, [node.id]: isChecked };
+
+      const updateChildren = (curNode) => {
+        curNode?.children?.forEach((item) => {
+          newState[item.id] = isChecked;
+          updateChildren(item);
+        });
+      };
+
+      updateChildren(node);
+
+      // If all children are checked then parent should also be checked
+      const verifyChecked = (curNode) => {
+        if (!curNode.children || curNode?.children.length == 0)
+          return newState[curNode.id] || false;
+
+        const allChildrenChecked = curNode.children.map((child) =>
+          verifyChecked(child)
+        );
+        const allchecked = allChildrenChecked.every(Boolean);
+
+        newState[curNode.id] = allchecked;
+        return allchecked;
+      };
+
+      nestedCheckBoxData.forEach((curNode) => {
+        console.log("id", curNode.id, data);
+        verifyChecked(curNode);
+      });
+
+      return newState;
+    });
+  };
+
+  return (
+    <div style={{ paddingLeft: "20px" }}>
+      {data?.map((item) => {
+        return (
+          <div key={item.id}>
+            <input
+              type="checkbox"
+              checked={checkedState[item.id] || false}
+              onChange={(e) => handleChange(e.target.checked, item)}
+            />
+            <label>{item.name}</label>
+            {item?.children && (
+              <NestedCheckboxes
+                data={item?.children}
+                checkedState={checkedState}
+                setCheckedState={setCheckedState}
+              />
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
+export default function App() {
+  const [checkedState, setCheckedState] = useState({});
+  return (
+    <div className="App">
+      <NestedCheckboxes
+        data={nestedCheckBoxData}
+        checkedState={checkedState}
+        setCheckedState={setCheckedState}
+      />
+    </div>
+  );
+}
