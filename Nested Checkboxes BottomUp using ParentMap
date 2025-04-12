@@ -1,0 +1,180 @@
+import "./styles.css";
+import { useState, useEffect } from "react";
+
+// Your data
+const nestedCheckBoxData = [
+  {
+    id: 1,
+    name: "Vehicles",
+    children: [
+      {
+        id: 2,
+        name: "Car",
+        children: [
+          { id: 4, name: "Sedan" },
+          { id: 5, name: "SUV" },
+          { id: 6, name: "Coupe" },
+          { id: 19, name: "Hatchback" },
+        ],
+      },
+      {
+        id: 3,
+        name: "Bus",
+        children: [
+          { id: 7, name: "School Bus" },
+          { id: 8, name: "Commercial" },
+        ],
+      },
+      {
+        id: 10,
+        name: "Motorbike",
+        children: [
+          { id: 11, name: "Cruiser" },
+          { id: 12, name: "Sport Bike" },
+        ],
+      },
+    ],
+  },
+  {
+    id: 13,
+    name: "Electronics",
+    children: [
+      {
+        id: 14,
+        name: "Computers",
+        children: [
+          { id: 15, name: "Laptop" },
+          { id: 16, name: "Desktop" },
+          { id: 17, name: "Tablet" },
+        ],
+      },
+      {
+        id: 18,
+        name: "Phones",
+        children: [
+          { id: 20, name: "Smartphone" },
+          { id: 21, name: "Feature Phone" },
+        ],
+      },
+    ],
+  },
+  {
+    id: 22,
+    name: "Furniture",
+    children: [
+      {
+        id: 23,
+        name: "Living Room",
+        children: [
+          { id: 24, name: "Sofa" },
+          { id: 25, name: "Coffee Table" },
+        ],
+      },
+      {
+        id: 26,
+        name: "Bedroom",
+        children: [
+          { id: 27, name: "Bed" },
+          { id: 28, name: "Wardrobe" },
+        ],
+      },
+    ],
+  },
+];
+
+// 🔁 Build parent lookup map
+const buildParentMap = (nodes, parent = null, map = {}) => {
+  nodes.forEach((node) => {
+    if (parent) {
+      map[node.id] = parent;
+    }
+    if (node.children) {
+      buildParentMap(node.children, node, map);
+    }
+  });
+  return map;
+};
+
+const NestedCheckboxes = ({
+  data,
+  setCheckedState,
+  checkedState,
+  parentMap,
+}) => {
+  const handleChange = (isChecked, node) => {
+    setCheckedState((prev) => {
+      const newState = { ...prev, [node.id]: isChecked };
+
+      // 1. Update all children recursively
+      const updateChildren = (curNode) => {
+        curNode.children?.forEach((child) => {
+          newState[child.id] = isChecked;
+          updateChildren(child);
+        });
+      };
+      updateChildren(node);
+
+      // 2. Update all parents recursively (bottom-up)
+      const updateParents = (curNode) => {
+        const parent = parentMap[curNode.id];
+        if (!parent) return;
+
+        const allChildrenChecked = parent.children.every(
+          (child) => newState[child.id]
+        );
+        newState[parent.id] = allChildrenChecked;
+
+        updateParents(parent);
+      };
+      updateParents(node);
+
+      return newState;
+    });
+  };
+
+  return (
+    <div style={{ paddingLeft: "20px" }}>
+      {data?.map((item) => {
+        return (
+          <div key={item.id}>
+            <input
+              type="checkbox"
+              checked={checkedState[item.id] || false}
+              onChange={(e) => handleChange(e.target.checked, item)}
+            />
+            <label>{item.name}</label>
+            {item.children && (
+              <NestedCheckboxes
+                data={item.children}
+                checkedState={checkedState}
+                setCheckedState={setCheckedState}
+                parentMap={parentMap}
+              />
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
+export default function App() {
+  const [checkedState, setCheckedState] = useState({});
+  const [parentMap, setParentMap] = useState({});
+
+  useEffect(() => {
+    const map = buildParentMap(nestedCheckBoxData);
+    setParentMap(map);
+  }, []);
+
+  return (
+    <div className="App">
+      <NestedCheckboxes
+        data={nestedCheckBoxData}
+        checkedState={checkedState}
+        setCheckedState={setCheckedState}
+        parentMap={parentMap}
+      />
+    </div>
+  );
+}
